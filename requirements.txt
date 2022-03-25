@@ -3,3 +3,4 @@ progressbar
 schedule
 dateparser
 pyyaml
+pymysql
