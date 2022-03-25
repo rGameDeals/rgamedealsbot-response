@@ -88,7 +88,7 @@ def respond(submission):
     #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
 
     cursorObj = con.cursor()
-    cursorObj.execute('DELETE from schedules WHERE postid = %s"', (submission.id,) )
+    cursorObj.execute('DELETE from schedules WHERE postid = %s', (submission.id,) )
     cursorObj.execute('INSERT into schedules(postid, schedtime) values(%s,%s)',(submission.id,(submission.created_utc + 2592000)) )
     con.commit()
 
@@ -190,7 +190,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
        try:
          #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
          cursorObj = con.cursor()
-         cursorObj.execute('DELETE from schedules WHERE postid = %s"', (submission.id,) )
+         cursorObj.execute('DELETE from schedules WHERE postid = %s', (submission.id,) )
          cursorObj.execute('INSERT into schedules(postid, schedtime) values(%s,%s)',(submission.id,getexp) )
          con.commit()
          logging.info("[Steam] | " + submission.title + " | https://redd.it/" + submission.id )
