@@ -34,7 +34,7 @@ reddit = praw.Reddit(client_id=REDDIT_CID,
                      username=REDDIT_USER)
 subreddit = reddit.subreddit(REDDIT_SUBREDDIT)
 
-apppath='/tmp/'
+apppath='/storage/'
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
