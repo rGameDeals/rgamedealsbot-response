@@ -9,6 +9,7 @@ import logging
 import re
 import dateparser
 import yaml
+import pymysql
 
 os.environ['TZ'] = 'UTC'
 
