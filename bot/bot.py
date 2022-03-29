@@ -36,12 +36,9 @@ subreddit = reddit.subreddit(REDDIT_SUBREDDIT)
 
 apppath='/storage/'
 
-console = logging.StreamHandler()
-console.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s %(name)-12s: %(levelname)-8s %(message)s')
-console.setFormatter(formatter)
-logging.getLogger('').addHandler(console)
-
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(message)s',
+                    datefmt='%m-%d %H:%M')
 
 class Error(Exception):
     """Base class"""
