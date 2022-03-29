@@ -270,7 +270,7 @@ while True:
                   if len(rows) == 0:
                     today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
                     monday = today - datetime.timedelta(days=today.weekday())
-                    cursorObj.execute('INSERT INTO weeklongdeals (week, post) VALUES (?, ?)', (monday.strftime('%Y%m%d'), submission.id))
+                    cursorObj.execute('INSERT INTO weeklongdeals (week, post) VALUES (%s, %s)', (monday.strftime('%Y%m%d'), submission.id))
                     con.commit()
 
 
