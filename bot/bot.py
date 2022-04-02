@@ -207,18 +207,19 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
       if rule is not None:
         if "match" in rule:
           if re.search( rule['match'] , url ):
-            if "dontmatch" not in rule or not re.search( rule['dontmatch'] , url ):
-              #print(rule)
-              if "disabled" not in rule or rule['disabled'] == False:
-                if "type" not in rule or ( "type" in rule and (rule['type'] == "link" and selfpost == 0) or (rule['type'] == "self" and selfpost == 1) or rule['type'] == "any") :
-                  if "reply_reason" in rule:
-                    reply_reason = rule['reply_reason']
-                  if "reply" in rule:
-                    reply_text = rule['reply']
-                  if "match-group" in rule:
-                    search1 = re.search( rule['match'] , url)
-                    match1 = search1.group(rule['match-group'])
-                    reply_text.replace('{{match}}', match1)
+            if "match-title" not in rule or re.search( rule['match-title'] , submission.title.lower() ):
+              if "dontmatch" not in rule or not re.search( rule['dontmatch'] , url ):
+                #print(rule)
+                if "disabled" not in rule or rule['disabled'] == False:
+                  if "type" not in rule or ( "type" in rule and (rule['type'] == "link" and selfpost == 0) or (rule['type'] == "self" and selfpost == 1) or rule['type'] == "any") :
+                    if "reply_reason" in rule:
+                      reply_reason = rule['reply_reason']
+                    if "reply" in rule:
+                      reply_text = rule['reply']
+                    if "match-group" in rule:
+                      search1 = re.search( rule['match'] , url)
+                      match1 = search1.group(rule['match-group'])
+                      reply_text.replace('{{match}}', match1)
 
     if post_footer:
       if reply_text != "":
