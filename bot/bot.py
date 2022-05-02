@@ -78,6 +78,7 @@ def logID(postid):
     f.close()
 
 def respond(submission):
+    con.ping(reconnect=True)
     #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
 
     cursorObj = con.cursor()
