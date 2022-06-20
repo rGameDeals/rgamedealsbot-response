@@ -142,7 +142,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           logging.info( "removing early EGS post | https://redd.it/" + submission.id )
           reply = "* We require a deal to be live before posting a submission."
           reply = "* Either this deal has already been submitted,\n\n* Or this deal has been submitted before it is live."
-          comment = submission.reply("Unfortunately, your submission has been removed for the following reasons:\n\n" +
+          comment = submission.reply(body="Unfortunately, your submission has been removed for the following reasons:\n\n" +
           reply +
           "\n\nI am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](https://www.reddit.com/message/compose/?to=/r/GameDeals) if you have any questions or concerns."
           )
@@ -170,7 +170,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
          removereason = "* It appears to be a part of the Weeklong deals. \n\nAs there are multiple games on sale, please post a thread with more games in the title [with this link](https://store.steampowered.com/search/?filter=weeklongdeals).\n\nIf you are the developer or publisher of this game, please leave a detailed disclosure as a top level comment as per [Rule 9](https://www.reddit.com/r/GameDeals/wiki/rules#wiki_9._developers_and_publishers), then [contact the mods for approval](https://www.reddit.com/message/compose?to=%2Fr%2FGameDeals)."
        else:
          removereason = "* It appears to be a part of the [Weeklong deals](https://redd.it/" + rows[0][2] + "). \n\nAs there are multiple games on sale, please include a comment within the existing thread to discuss this deal.\n\nIf you are the developeror publisher of this game, please leave a detailed disclosure as a top level comment as per [Rule 9](https://www.reddit.com/r/GameDeals/wiki/rules#wiki_9._developers_and_publishers), then [contact the mods for approval](https://www.reddit.com/message/compose?to=%2Fr%2FGameDeals)."
-       comment = submission.reply("Unfortunately, your submission has been removed for the following reasons:\n\n" +
+       comment = submission.reply(body="Unfortunately, your submission has been removed for the following reasons:\n\n" +
             removereason +
             "\n\nI am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](https://www.reddit.com/message/compose/?to=/r/GameDeals) if you have any questions or concerns."
        )
@@ -224,9 +224,9 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 
     if post_footer:
       if reply_text != "":
-        comment = submission.reply(reply_text+"\n\n*****\n\n"+footer)
+        comment = submission.reply(body=reply_text+"\n\n*****\n\n"+footer)
       else:
-        comment = submission.reply(footer)
+        comment = submission.reply(body=footer)
       comment.mod.distinguish(sticky=True)
       logging.info("Replied to: " + submission.title + "   Reason: " + reply_reason)
     logID(submission.id)
