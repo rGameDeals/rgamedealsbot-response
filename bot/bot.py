@@ -243,7 +243,8 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 while True:
     try:
         logging.info("Initializing bot...")
-        for submission in subreddit.stream.submissions():
+        for submission in subreddit.stream.submissions(pause_after=0):
+         if submission:
             if submission.created < int(time.time()) - 86400:
                 continue
             if submission.title[0:1].lower() == "[" or submission.title[0:1].lower() == "[":
