@@ -36,7 +36,7 @@ subreddit = reddit.subreddit(REDDIT_SUBREDDIT)
 
 apppath='/storage/'
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(message)s',
                     datefmt='%m-%d %H:%M')
 
@@ -78,6 +78,7 @@ def logID(postid):
     f.close()
 
 def respond(submission):
+    logging.debug("checking submission")
     con.ping(reconnect=True)
     #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
 
@@ -95,11 +96,14 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 ^(Note: To prevent abuse, requests are logged publicly.  Intentional abuse will likely result in a ban.)
 """
 
+    logging.debug("loading rules")
+
     wikiconfig = yaml.safe_load( reddit.subreddit('gamedeals').wiki['gamedealsbot-config'].content_md )
 
     footer = wikiconfig['footer']
     footer = footer.replace('{{expired trigger}}',wikiconfig['expired-trigger'])
     footer = footer.replace('{{available trigger}}',wikiconfig['available-trigger'])
+    logging.debug("loading rules - done")
 
 
     reply_reason = "Generic Post"
@@ -204,6 +208,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
       rules = working_rules
     working_rules = rules
 
+    logging.debug("processing rules")
     for rule in rules:
       if rule is not None:
         if "match" in rule:
@@ -221,6 +226,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
                       search1 = re.search( rule['match'] , url)
                       match1 = search1.group(rule['match-group'])
                       reply_text.replace('{{match}}', match1)
+    logging.debug("processing rules - done")
 
     if post_footer:
       if reply_text != "":
