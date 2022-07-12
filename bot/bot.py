@@ -226,6 +226,9 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
                       search1 = re.search( rule['match'] , url)
                       match1 = search1.group(rule['match-group'])
                       reply_text.replace('{{match}}', match1)
+                      logging.info( match1 )
+
+
     logging.debug("processing rules - done")
 
     if post_footer:
