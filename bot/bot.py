@@ -13,7 +13,8 @@ import pymysql
 
 os.environ['TZ'] = 'UTC'
 
-con = pymysql.connect(
+if 'MYSQL_HOST' in os.environ:
+  con = pymysql.connect(
     host=os.environ['MYSQL_HOST'],
     user=os.environ['MYSQL_USER'],
     passwd=os.environ['MYSQL_PASS'],
@@ -79,13 +80,15 @@ def logID(postid):
 
 def respond(submission):
     logging.debug("checking submission")
-    con.ping(reconnect=True)
+    if 'MYSQL_HOST' in os.environ:
+      con.ping(reconnect=True)
     #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
 
-    cursorObj = con.cursor()
-    cursorObj.execute('DELETE from schedules WHERE postid = %s', (submission.id,) )
-    cursorObj.execute('INSERT into schedules(postid, schedtime) values(%s,%s)',(submission.id,(submission.created_utc + 2592000)) )
-    con.commit()
+    if 'MYSQL_HOST' in os.environ:
+      cursorObj = con.cursor()
+      cursorObj.execute('DELETE from schedules WHERE postid = %s', (submission.id,) )
+      cursorObj.execute('INSERT into schedules(postid, schedtime) values(%s,%s)',(submission.id,(submission.created_utc + 2592000)) )
+      con.commit()
 
     post_footer = True
     footer = """
@@ -167,8 +170,9 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
        datetext = monday.strftime('%Y%m%d')
        #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
 
-       cursorObj = con.cursor()
-       cursorObj.execute('SELECT * FROM weeklongdeals WHERE week = %s', (datetext,) )
+       if 'MYSQL_HOST' in os.environ:
+         cursorObj = con.cursor()
+         cursorObj.execute('SELECT * FROM weeklongdeals WHERE week = %s', (datetext,) )
        rows = cursorObj.fetchall()
        if len(rows) == 0:
          removereason = "* It appears to be a part of the Weeklong deals. \n\nAs there are multiple games on sale, please post a thread with more games in the title [with this link](https://store.steampowered.com/search/?filter=weeklongdeals).\n\nIf you are the developer or publisher of this game, please leave a detailed disclosure as a top level comment as per [Rule 9](https://www.reddit.com/r/GameDeals/wiki/rules#wiki_9._developers_and_publishers), then [contact the mods for approval](https://www.reddit.com/message/compose?to=%2Fr%2FGameDeals)."
@@ -187,10 +191,11 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
      if getexp is not None:
        try:
          #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
-         cursorObj = con.cursor()
-         cursorObj.execute('DELETE from schedules WHERE postid = %s', (submission.id,) )
-         cursorObj.execute('INSERT into schedules(postid, schedtime) values(%s,%s)',(submission.id,getexp) )
-         con.commit()
+         if 'MYSQL_HOST' in os.environ:
+           cursorObj = con.cursor()
+           cursorObj.execute('DELETE from schedules WHERE postid = %s', (submission.id,) )
+           cursorObj.execute('INSERT into schedules(postid, schedtime) values(%s,%s)',(submission.id,getexp) )
+           con.commit()
          logging.info("[Steam] | " + submission.title + " | https://redd.it/" + submission.id )
          logging.info("setting up schedule: bot for: " + submission.id)
          reply_reason = "Steam Game"
@@ -225,9 +230,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
                     if "match-group" in rule:
                       search1 = re.search( rule['match'] , url)
                       match1 = search1.group(rule['match-group'])
-                      reply_text.replace("!!match!!", match1)
-                      logging.info( reply_text )
-
+                      reply_text = reply_text.replace('{{match}}', match1)
 
     logging.debug("processing rules - done")
 
@@ -243,9 +246,9 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 
 #submission = reddit.submission("qiixoa")
 #submission = reddit.submission("qijjlf")
-#submission = reddit.submission("qijsq0")
-#respond( submission )
-#exit()
+submission = reddit.submission("vx9z83")
+respond( submission )
+exit()
 
 
 
@@ -273,14 +276,15 @@ while True:
                   today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
                   monday = today - datetime.timedelta(days=today.weekday())
                   datetext = monday.strftime('%Y%m%d')
-                  cursorObj = con.cursor()
-                  cursorObj.execute('SELECT * FROM weeklongdeals WHERE week = %s', (datetext,) )
-                  rows = cursorObj.fetchall()
-                  if len(rows) == 0:
-                    today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
-                    monday = today - datetime.timedelta(days=today.weekday())
-                    cursorObj.execute('INSERT INTO weeklongdeals (week, post) VALUES (%s, %s)', (monday.strftime('%Y%m%d'), submission.id))
-                    con.commit()
+                  if 'MYSQL_HOST' in os.environ:
+                    cursorObj = con.cursor()
+                    cursorObj.execute('SELECT * FROM weeklongdeals WHERE week = %s', (datetext,) )
+                    rows = cursorObj.fetchall()
+                    if len(rows) == 0:
+                      today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
+                      monday = today - datetime.timedelta(days=today.weekday())
+                      cursorObj.execute('INSERT INTO weeklongdeals (week, post) VALUES (%s, %s)', (monday.strftime('%Y%m%d'), submission.id))
+                      con.commit()
 
 
                 ###
