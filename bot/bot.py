@@ -227,6 +227,8 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
                       match1 = search1.group(rule['match-group'])
                       reply_text.replace('{{match}}', match1)
                       logging.info( reply_text )
+                      reply_text.replace('{{match}}', "AA")
+                      logging.info( reply_text )
 
 
     logging.debug("processing rules - done")
