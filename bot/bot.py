@@ -37,8 +37,12 @@ subreddit = reddit.subreddit(REDDIT_SUBREDDIT)
 
 apppath='/storage/'
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s - %(message)s',
+#logging.basicConfig(level=logging.INFO,
+#                    format='%(asctime)s - %(message)s',
+#                    datefmt='%m-%d %H:%M')
+
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%m-%d %H:%M')
 
 class Error(Exception):
@@ -121,6 +125,8 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
       logging.info("gamedealsmod posted, skipping: " + submission.title)
       return
     selfpost = 0
+    logging.debug("checking self")
+
     if submission.is_self:
         selfpost = 1
         urls = re.findall('(?:(?:https?):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+', submission.selftext)
@@ -140,6 +146,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 ### get url for link post
     if not submission.is_self:
       url = submission.url
+    logging.debug("checking EGS")
     if "epicgames.com" in url.lower():
       if "free" in submission.title.lower():
         postdate = dateparser.parse( str(submission.created_utc) , settings={'TO_TIMEZONE': 'US/Pacific', 'TIMEZONE': 'UTC' } )
@@ -159,6 +166,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           return
 
 
+    logging.debug("checking Steam")
     if re.search("store.steampowered.com/(sub|app)", url) is not None:
      if submission.author_flair_css_class is not None and submission.is_self:
        return
@@ -177,7 +185,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
        if len(rows) == 0:
          removereason = "* It appears to be a part of the Weeklong deals. \n\nAs there are multiple games on sale, please post a thread with more games in the title [with this link](https://store.steampowered.com/search/?filter=weeklongdeals).\n\nIf you are the developer or publisher of this game, please leave a detailed disclosure as a top level comment as per [Rule 9](https://www.reddit.com/r/GameDeals/wiki/rules#wiki_9._developers_and_publishers), then [contact the mods for approval](https://www.reddit.com/message/compose?to=%2Fr%2FGameDeals)."
        else:
-         removereason = "* It appears to be a part of the [Weeklong deals](https://redd.it/" + rows[0][2] + "). \n\nAs there are multiple games on sale, please include a comment within the existing thread to discuss this deal.\n\nIf you are the developeror publisher of this game, please leave a detailed disclosure as a top level comment as per [Rule 9](https://www.reddit.com/r/GameDeals/wiki/rules#wiki_9._developers_and_publishers), then [contact the mods for approval](https://www.reddit.com/message/compose?to=%2Fr%2FGameDeals)."
+         removereason = "* It appears to be a part of the [Weeklong deals](https://redd.it/" + rows[0][2] + "). \n\nAs there are multiple games on sale, please include a comment within the existing thread to discuss this deal.\n\nIf you are the developer or publisher of this game, please leave a detailed disclosure as a top level comment as per [Rule 9](https://www.reddit.com/r/GameDeals/wiki/rules#wiki_9._developers_and_publishers), then [contact the mods for approval](https://www.reddit.com/message/compose?to=%2Fr%2FGameDeals)."
        comment = submission.reply(body="Unfortunately, your submission has been removed for the following reasons:\n\n" +
             removereason +
             "\n\nI am a bot, and this action was performed automatically. Please [contact the moderators of this subreddit](https://www.reddit.com/message/compose/?to=/r/GameDeals) if you have any questions or concerns."
@@ -207,11 +215,13 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 
 
 
+    logging.debug("Loading Notes")
     try:
       rules = yaml.safe_load_all( reddit.subreddit('gamedeals').wiki['gamedealsbot-storenotes'].content_md )
     except:
       rules = working_rules
     working_rules = rules
+    logging.debug("Notes Loaded")
 
     logging.debug("processing rules")
     for rule in rules:
@@ -234,6 +244,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 
     logging.debug("processing rules - done")
 
+    logging.debug("posting reply")
     if post_footer:
       if reply_text != "":
         comment = submission.reply(body=reply_text+"\n\n*****\n\n"+footer)
@@ -247,9 +258,9 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 #submission = reddit.submission("qiixoa")
 #submission = reddit.submission("qijjlf")
 
-#submission = reddit.submission("vx9z83")
-#respond( submission )
-#exit()
+submission = reddit.submission("vx9z83")
+respond( submission )
+exit()
 
 
 
