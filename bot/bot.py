@@ -258,9 +258,9 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 #submission = reddit.submission("qiixoa")
 #submission = reddit.submission("qijjlf")
 
-submission = reddit.submission("vx9z83")
-respond( submission )
-exit()
+#submission = reddit.submission("vx9z83")
+#respond( submission )
+#exit()
 
 
 
