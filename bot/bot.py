@@ -37,13 +37,13 @@ subreddit = reddit.subreddit(REDDIT_SUBREDDIT)
 
 apppath='/storage/'
 
-#logging.basicConfig(level=logging.INFO,
-#                    format='%(asctime)s - %(message)s',
-#                    datefmt='%m-%d %H:%M')
-
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+logging.basicConfig(level=logging.INFO,
+                    format='%(asctime)s - %(message)s',
                     datefmt='%m-%d %H:%M')
+
+#logging.basicConfig(level=logging.DEBUG,
+#                    format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
+#                    datefmt='%m-%d %H:%M')
 
 class Error(Exception):
     """Base class"""
