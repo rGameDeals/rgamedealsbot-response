@@ -173,7 +173,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 
       profile_url = "https://itch.io/profile/" + match1
 
-      profile_page = r.get(profile_url)
+      profile_page = requests.get(profile_url)
 
       pp1 = re.search( 'A member registered <abbr title="([\w\d\ \:\@]+)">' , profile_page.text)
       pm1 = pp1.group(1)
