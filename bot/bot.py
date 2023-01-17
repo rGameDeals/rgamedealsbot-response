@@ -195,7 +195,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           tm = dateparser.parse( pm1, settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'UTC', 'TO_TIMEZONE': 'UTC'} )
           tm2 = time.mktime( tm.timetuple() )
           ct = (int(time.time()) - int( tm2 )) / 86400
-          logging.info("user created " + str(ct) + " days ago")
+          logging.info("game published " + str(ct) + " days ago")
           if ct < int(wikiconfig['itch-game-publish-days']):
             submission.mod.remove()
             reddit.subreddit('modgamedeals').message(subject='suspected spam/virus game for itch.io.', message='suspected spam/virus account for itch.io.  https://redd.it/' + submission.id)
