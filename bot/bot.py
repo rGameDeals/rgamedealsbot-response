@@ -165,20 +165,15 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           #logID(submission.id)
           #return
 
-
+    account_flag = 0
     if re.search("//(\S+)\.itch.io", url) is not None:
       logging.info("checking itch.io")
       search1 = re.search( "//(\S+)\.itch.io" , url)
       match1 = search1.group(1)
-
       profile_url = "https://itch.io/profile/" + match1
-
       profile_page = requests.get(profile_url)
-
-
       pp1 = re.search( 'A member registered <abbr title="([\w\d\ \:\@]+)">' , profile_page.text)
       if pp1:
-
           pm1 = pp1.group(1)
           tm = dateparser.parse( pm1, settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'UTC', 'TO_TIMEZONE': 'UTC'} )
           tm2 = time.mktime( tm.timetuple() )
@@ -186,9 +181,26 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           logging.info("user created " + str(ct) + " days ago")
           if ct < int(wikiconfig['itch-creation-days']):
             submission.mod.remove()
+            account_flag = 1
             reddit.subreddit('modgamedeals').message(subject='suspected spam/virus account for itch.io.', message='suspected spam/virus account for itch.io.  https://redd.it/' + submission.id)
-            logID(submission.id)
-            return
+            #logID(submission.id)
+            #return
+
+    if re.search("//(\S+)\.itch.io", url) is not None and account_flag == 0:
+      logging.info("checking itch.io")
+      game_page = requests.get(url)
+      pp1 = re.search( 'Published</td><td><abbr title="([\w\d\ \:\@]+)">' , game_page.text)
+      if pp1:
+          pm1 = pp1.group(1)
+          tm = dateparser.parse( pm1, settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'UTC', 'TO_TIMEZONE': 'UTC'} )
+          tm2 = time.mktime( tm.timetuple() )
+          ct = (int(time.time()) - int( tm2 )) / 86400
+          logging.info("user created " + str(ct) + " days ago")
+          if ct < int(wikiconfig['itch-game-publish-days']):
+            submission.mod.remove()
+            reddit.subreddit('modgamedeals').message(subject='suspected spam/virus game for itch.io.', message='suspected spam/virus account for itch.io.  https://redd.it/' + submission.id)
+            #logID(submission.id)
+            #return
 
     if re.search("store.steampowered.com/(sub|app)", url) is not None:
      logging.debug("checking Steam")
