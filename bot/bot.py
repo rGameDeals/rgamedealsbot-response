@@ -166,8 +166,21 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           return
 
 
-    logging.debug("checking Steam")
+    if re.search("(\S+)\.itch.io", url) is not None:
+      logging.debug("checking itch.io")
+      search1 = re.search( "(\S+)\.itch.io" , url)
+      match1 = search1.group(1)
+
+      profile_url = "https://itch.io/profile/" + match1
+
+      logging.info(match1)
+
+
+
+
+
     if re.search("store.steampowered.com/(sub|app)", url) is not None:
+     logging.debug("checking Steam")
      if submission.author_flair_css_class is not None and submission.is_self:
        return
      r = requests.get( url )
