@@ -184,9 +184,12 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           tm2 = time.mktime( tm.timetuple() )
           ct = (int(time.time()) - int( tm2 )) / 86400
           logging.info("user created " + str(ct) + " days ago")
+          if ct < int(wikiconfig['itch-creation-days']):
+            submission.mod.remove()
+            reddit.subreddit('modgamedeals').message('suspected spam/virus account for itch.io.', 'suspected spam/virus account for itch.io.  https://redd.it' + submission.id)
+            logID(submission.id)
+            return
 
-      time.sleep(60)
-      exit()
     if re.search("store.steampowered.com/(sub|app)", url) is not None:
      logging.debug("checking Steam")
      if submission.author_flair_css_class is not None and submission.is_self:
