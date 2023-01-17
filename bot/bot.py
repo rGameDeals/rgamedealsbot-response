@@ -166,17 +166,23 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           return
 
 
-    if re.search("(\S+)\.itch.io", url) is not None:
+    if re.search("//(\S+)\.itch.io", url) is not None:
       logging.debug("checking itch.io")
-      search1 = re.search( "(\S+)\.itch.io" , url)
+      search1 = re.search( "//(\S+)\.itch.io" , url)
       match1 = search1.group(1)
 
       profile_url = "https://itch.io/profile/" + match1
 
-      logging.info(match1)
+      profile_page = r.get(profile_url)
+
+      pp1 = re.search( 'A member registered <abbr title="([\w\d\ \:\@]+)">' , profile_page.text)
+      pm1 = pp1.group(1)
 
 
-
+      tm = dateparser.parse( pm1, settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'UTC', 'TO_TIMEZONE': 'UTC'} )
+      tm2 = time.mktime( tm.timetuple() )
+      ct = int(time.time()) - int( tm2 )
+      logging.info("user created " + str(ct) + " days ago")
 
 
     if re.search("store.steampowered.com/(sub|app)", url) is not None:
