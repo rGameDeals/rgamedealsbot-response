@@ -162,8 +162,8 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           )
           submission.mod.remove()
           comment.mod.distinguish(sticky=True)
-          logID(submission.id)
-          return
+          #logID(submission.id)
+          #return
 
 
     if re.search("//(\S+)\.itch.io", url) is not None:
