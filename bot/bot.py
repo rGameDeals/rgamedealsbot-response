@@ -167,7 +167,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 
 
     if re.search("//(\S+)\.itch.io", url) is not None:
-      logging.logging("checking itch.io")
+      logging.info("checking itch.io")
       search1 = re.search( "//(\S+)\.itch.io" , url)
       match1 = search1.group(1)
 
