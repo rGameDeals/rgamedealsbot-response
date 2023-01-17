@@ -182,9 +182,11 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           pm1 = pp1.group(1)
           tm = dateparser.parse( pm1, settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'UTC', 'TO_TIMEZONE': 'UTC'} )
           tm2 = time.mktime( tm.timetuple() )
+          ct = int(time.time()) - int( tm2 )
           logging.info(tm)
           logging.info(tm2)
-          ct = int(time.time()) - int( tm2 )
+          logging.info(time.time())
+          logging.info(ct)
           logging.info("user created " + str(ct) + " days ago")
 
       time.sleep(60)
