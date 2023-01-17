@@ -176,6 +176,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
       profile_page = requests.get(profile_url)
 
       pp1 = re.search( 'A member registered <abbr title="([\w\d\ \:\@]+)">' , profile_page.text)
+      logging.info(pp1)
       pm1 = pp1.group(1)
 
 
