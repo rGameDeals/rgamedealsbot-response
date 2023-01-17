@@ -186,7 +186,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           logging.info("user created " + str(ct) + " days ago")
           if ct < int(wikiconfig['itch-creation-days']):
             submission.mod.remove()
-            reddit.subreddit('modgamedeals').message('suspected spam/virus account for itch.io.', 'suspected spam/virus account for itch.io.  https://redd.it' + submission.id)
+            reddit.subreddit('modgamedeals').message(subject='suspected spam/virus account for itch.io.', message='suspected spam/virus account for itch.io.  https://redd.it/' + submission.id)
             logID(submission.id)
             return
 
