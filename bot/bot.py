@@ -175,19 +175,20 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 
       profile_page = requests.get(profile_url)
 
-      logging.info( profile_page.text )
 
       pp1 = re.search( 'A member registered <abbr title="([\w\d\ \:\@]+)">' , profile_page.text)
-      logging.info(pp1)
-      pm1 = pp1.group(1)
+      if pp1:
 
+          pm1 = pp1.group(1)
+          tm = dateparser.parse( pm1, settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'UTC', 'TO_TIMEZONE': 'UTC'} )
+          tm2 = time.mktime( tm.timetuple() )
+          logging.info(tm)
+          logging.info(tm2)
+          ct = int(time.time()) - int( tm2 )
+          logging.info("user created " + str(ct) + " days ago")
 
-      tm = dateparser.parse( pm1, settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'UTC', 'TO_TIMEZONE': 'UTC'} )
-      tm2 = time.mktime( tm.timetuple() )
-      ct = int(time.time()) - int( tm2 )
-      logging.info("user created " + str(ct) + " days ago")
-
-
+      time.sleep(60)
+      exit()
     if re.search("store.steampowered.com/(sub|app)", url) is not None:
      logging.debug("checking Steam")
      if submission.author_flair_css_class is not None and submission.is_self:
