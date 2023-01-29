@@ -5,6 +5,7 @@ import prawcore
 import requests
 import os
 import datetime
+import calendar
 import logging
 import re
 import dateparser
@@ -56,6 +57,24 @@ class LinkError(Error):
 # make an empty file for first run
 f = open(apppath+"postids.txt","a+")
 f.close()
+
+def get_last_tuesday(for_month):
+    r = dateparser.parse(for_month)
+    year = r.year
+    month = r.month
+    day = r.day
+
+    last_date = calendar.monthrange(year, month)[1]
+    full_end_date = dateparser.parse(f"{last_date}/{month}/{year} UTC")
+    lastTuesday = full_end_date
+    oneday = datetime.timedelta(days=1)
+
+    while lastTuesday.weekday() != calendar.TUESDAY:
+        lastFriday -= oneday
+
+
+    start_date_str = lastTuesday.strftime('%a, %d %B %Y ')
+    return start_date_str
 
 def getsteamexpiry(steamurl):
   headers = {
@@ -273,6 +292,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
                       reply_reason = rule['reply_reason']
                     if "reply" in rule:
                       reply_text = rule['reply']
+                      reply_text = reply_text.replace('{{last_tuesday}}', get_last_tuesday("This Month UTC"))
                     if "match-group" in rule:
                       search1 = re.search( rule['match'] , url)
                       match1 = search1.group(rule['match-group'])
