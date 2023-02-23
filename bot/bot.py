@@ -199,9 +199,10 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           ct = (int(time.time()) - int( tm2 )) / 86400
           logging.info("user created " + str(ct) + " days ago")
           if ct < int(wikiconfig['itch-creation-days']):
-            submission.mod.remove()
+            #submission.mod.remove()
             account_flag = 1
-            reddit.subreddit('modgamedeals').message(subject='suspected spam/virus account for itch.io.', message='suspected spam/virus account for itch.io.  https://redd.it/' + submission.id)
+            submission.report('new itch.io account.')
+            #reddit.subreddit('modgamedeals').message(subject='suspected spam/virus account for itch.io.', message='suspected spam/virus account for itch.io.  https://redd.it/' + submission.id)
             #logID(submission.id)
             #return
 
@@ -216,8 +217,9 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           ct = (int(time.time()) - int( tm2 )) / 86400
           logging.info("game published " + str(ct) + " days ago")
           if ct < int(wikiconfig['itch-game-publish-days']):
-            submission.mod.remove()
-            reddit.subreddit('modgamedeals').message(subject='suspected spam/virus game for itch.io.', message='suspected spam/virus game for itch.io.  https://redd.it/' + submission.id)
+            submission.report('new itch.io submission.')
+            #submission.mod.remove()
+            #reddit.subreddit('modgamedeals').message(subject='suspected spam/virus game for itch.io.', message='suspected spam/virus game for itch.io.  https://redd.it/' + submission.id)
             #logID(submission.id)
             #return
 
@@ -292,7 +294,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
                       reply_reason = rule['reply_reason']
                     if "reply" in rule:
                       reply_text = rule['reply']
-                      reply_text = reply_text.replace('{{last_tuesday}}', get_last_tuesday("This Month UTC"))
+                      reply_text = reply_text.replace('{{last_tuesday}}', get_last_tuesday("This Month UTC") )
                     if "match-group" in rule:
                       search1 = re.search( rule['match'] , url)
                       match1 = search1.group(rule['match-group'])
