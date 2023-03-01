@@ -70,7 +70,7 @@ def get_last_tuesday(for_month):
     oneday = datetime.timedelta(days=1)
 
     while lastTuesday.weekday() != calendar.TUESDAY:
-        lastFriday -= oneday
+        lastTuesday -= oneday
 
 
     start_date_str = lastTuesday.strftime('%a, %d %B %Y ')
