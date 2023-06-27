@@ -305,7 +305,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
     logging.debug("posting reply")
     ANNOUCEMENT=wikiconfig['announcement-enable']
     if post_footer:
-      if ANNOUCEMENT.lower() == 'true':
+      if ANNOUCEMENT == True:
         reply_text = wikiconfig['announcement'] + "\n\n*****\n\n"+reply_text
       if reply_text != "":
         comment = submission.reply(body=reply_text+"\n\n*****\n\n"+footer)
@@ -314,7 +314,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
       comment.mod.distinguish(sticky=True)
       logging.info("Replied to: " + submission.title + "   Reason: " + reply_reason)
     else:
-      if ANNOUCEMENT.lower() == 'true':
+      if ANNOUCEMENT  == True:
         reply_reason = "posting annoucement"
         postcomment = wikiconfig['announcement'] + "\n\n*****\n\n" + wikiconfig['announcement-only-footer']
         comment = submission.reply(body=postcomment)
