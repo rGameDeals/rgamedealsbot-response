@@ -315,7 +315,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
     else:
       if wikiconfig['announcement-enable'].lower() == 'true':
         reply_reason = "posting annoucement"
-        postcomment = wikiconfig['announcement'] + "\n\n*****\n\n"+wikiconfig['announcement-only-footer']
+        postcomment = wikiconfig['announcement'] + "\n\n*****\n\n" + wikiconfig['announcement-only-footer']
         comment = submission.reply(body=postcomment)
         comment.mod.distinguish(sticky=True)
         logging.info("Replied to: " + submission.title + "   Reason: " + reply_reason)
@@ -446,7 +446,8 @@ while True:
         logging.info("Rate limited, waiting 5 seconds")
         time.sleep(5)
 
-    except:
+    except Exception as err:
         logging.info("Unknown Error connecting to reddit servers. Retrying in 1 minute...")
+        logging.info(f"Unexpected {err=}, {type(err)=}")
         time.sleep(60)
 
