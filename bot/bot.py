@@ -162,6 +162,8 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
             unique_urls.append(url)
 
         url = urls[0]    ### use only the first url
+        if "http" not in url:
+          url = "https://" + url
 ### get url for link post
     if not submission.is_self:
       url = submission.url
