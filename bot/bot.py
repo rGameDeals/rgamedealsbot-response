@@ -441,6 +441,10 @@ while True:
                       continue
 
 
+    except prawcore.exceptions.TooManyRequests:
+       logging.info('api limit hit, reddit changes not affecting moderation bots at all. lol........')
+       time.sleep(10)
+	
     except PrawcoreException as err:
         logging.info('Oops I did it again.. ERROR= {}'.format(err))
         time.sleep(20)
