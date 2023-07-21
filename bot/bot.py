@@ -441,9 +441,13 @@ while True:
                       continue
 
 
-    except (prawcore.exceptions.RequestException, prawcore.exceptions.ResponseException):
-        logging.info("Error connecting to reddit servers. Retrying in 1 minute...")
-        time.sleep(60)
+    except PrawcoreException as err:
+        logging.info('Oops I did it again.. ERROR= {}'.format(err))
+        time.sleep(20)
+
+    #except (prawcore.exceptions.RequestException, prawcore.exceptions.ResponseException):
+    #    logging.info("Error connecting to reddit servers. Retrying in 1 minute...")
+    #    time.sleep(60)
 
     except praw.exceptions.APIException:
         logging.info("Rate limited, waiting 5 seconds")
