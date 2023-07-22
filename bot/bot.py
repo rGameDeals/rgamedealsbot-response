@@ -441,6 +441,10 @@ while True:
                       continue
 
 
+    except prawcore.exceptions.ServerError:
+       loggnig.info('server error, sleeping 20seconds')
+       time.sleep(20)
+
     except prawcore.exceptions.TooManyRequests:
        logging.info('api limit hit, reddit changes not affecting moderation bots at all. lol........')
        time.sleep(10)
