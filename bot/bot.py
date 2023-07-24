@@ -442,7 +442,7 @@ while True:
 
 
     except prawcore.exceptions.ServerError:
-       loggnig.info('server error, sleeping 20seconds')
+       logging.info('server error, sleeping 20 seconds')
        time.sleep(20)
 
     except prawcore.exceptions.TooManyRequests:
