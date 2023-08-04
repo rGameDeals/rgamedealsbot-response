@@ -448,10 +448,9 @@ while True:
     except prawcore.exceptions.TooManyRequests:
        logging.info('api limit hit, reddit changes not affecting moderation bots at all. lol........')
        time.sleep(10)
-	
-    except praw.exceptions as err:
-        logging.info('Oops I did it again.. ERROR= {}'.format(err))
-        time.sleep(20)
+    except prawcore.exceptions.ResponseException:
+       logging.info('server error')
+       time.sleep(20)
 
     #except (prawcore.exceptions.RequestException, prawcore.exceptions.ResponseException):
     #    logging.info("Error connecting to reddit servers. Retrying in 1 minute...")
