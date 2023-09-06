@@ -231,6 +231,25 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
        return
      r = requests.get( url )
 
+
+     getexp = getsteamexpiry( url )
+     if getexp is not None:
+       try:
+         #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
+         if 'MYSQL_HOST' in os.environ:
+           cursorObj = con.cursor()
+           cursorObj.execute('DELETE from schedules WHERE postid = %s', (submission.id,) )
+           cursorObj.execute('INSERT into schedules(postid, schedtime) values(%s,%s)',(submission.id,getexp) )
+           con.commit()
+         logging.info("[Steam] | " + submission.title + " | https://redd.it/" + submission.id )
+         logging.info("setting up schedule: bot for: " + submission.id)
+         reply_reason = "Steam Game"
+         post_footer = False
+         #reply_text = "^(automatic deal expiry set for " + datetime.datetime.fromtimestamp(int(getexp)).strftime('%Y-%m-%d %H:%M:%S') + " UTC)\n\n"
+       except:
+         pass
+
+
      if re.search("WEEK LONG DEAL", r.text) is not None:
        today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
        monday = today - datetime.timedelta(days=today.weekday())
@@ -253,23 +272,6 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
        submission.mod.remove()
        return
 
-
-     getexp = getsteamexpiry( url )
-     if getexp is not None:
-       try:
-         #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
-         if 'MYSQL_HOST' in os.environ:
-           cursorObj = con.cursor()
-           cursorObj.execute('DELETE from schedules WHERE postid = %s', (submission.id,) )
-           cursorObj.execute('INSERT into schedules(postid, schedtime) values(%s,%s)',(submission.id,getexp) )
-           con.commit()
-         logging.info("[Steam] | " + submission.title + " | https://redd.it/" + submission.id )
-         logging.info("setting up schedule: bot for: " + submission.id)
-         reply_reason = "Steam Game"
-         post_footer = False
-         #reply_text = "^(automatic deal expiry set for " + datetime.datetime.fromtimestamp(int(getexp)).strftime('%Y-%m-%d %H:%M:%S') + " UTC)\n\n"
-       except:
-         pass
 
 
 
