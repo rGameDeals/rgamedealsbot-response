@@ -93,7 +93,7 @@ def getsteamexpiry(steamurl):
     enddate= dateparser.parse( "10am " + match1.group(1)  , settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'US/Pacific','TO_TIMEZONE': 'UTC' } )
     return time.mktime( enddate.timetuple() )
   elif re.search("Free to keep when you get it before ([\w\ ]+).\t", r.text) is not None:
-    match1 = re.search(""Free to keep when you get it before ([\w\ ]+).\t"", r.text)
+    match1 = re.search("Free to keep when you get it before ([\w\ ]+).\t", r.text)
     enddate= dateparser.parse( "" + match1.group(1)  , settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'US/Pacific','TO_TIMEZONE': 'UTC' } )
     return time.mktime( enddate.timetuple() )
   return
