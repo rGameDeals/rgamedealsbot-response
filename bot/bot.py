@@ -176,8 +176,8 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
       if "free" in submission.title.lower():
         postdate = dateparser.parse( str(submission.created_utc) , settings={'TO_TIMEZONE': 'US/Pacific', 'TIMEZONE': 'UTC' } )
 
-#        if postdate.hour < 8 or postdate.hour > 9: # used for xmas rule, before being permanently disabled via AM to block community posting due to excessive need to moderate
-        if postdate.weekday() == 3 and postdate.hour < 8: # removed for EGS's 15 days of games to make the rule more active
+        if postdate.hour < 8 or postdate.hour > 9: # used for xmas rule, before being permanently disabled via AM to block community posting due to excessive need to moderate
+#        if postdate.weekday() == 3 and postdate.hour < 8: # removed for EGS's 15 days of games to make the rule more active
           logging.info( "removing early EGS post | https://redd.it/" + submission.id )
           reply = "* We require a deal to be live before posting a submission."
           reply = "* Either this deal has already been submitted,\n\n* Or this deal has been submitted before it is live."
