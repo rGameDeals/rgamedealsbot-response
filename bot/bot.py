@@ -177,7 +177,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
         postdate = dateparser.parse( str(submission.created_utc) , settings={'TO_TIMEZONE': 'US/Pacific', 'TIMEZONE': 'UTC' } )
 
 
-        if (  int(wikiconfig['egs-daily']) == 1 and ( postdate.hour < 8 or postdate.hour > 9 ) )     or     ( int(wikiconfig['egs-daily']) == 0 and ( postdate.weekday() == 3 and postdate.hour < 8 ) ):
+        if (  wikiconfig['egs-daily'] == "true" and ( postdate.hour < 8 or postdate.hour > 9 ) )     or     ( wikiconfig['egs-daily'] == "false" and ( postdate.weekday() == 3 and postdate.hour < 8 ) ):
 
 ######### changed the below to work based on wiki config.
 #        if postdate.hour < 8 or postdate.hour > 9: # used for xmas rule, before being permanently disabled via AM to block community posting due to excessive need to moderate
