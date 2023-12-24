@@ -76,6 +76,22 @@ def get_last_tuesday(for_month):
     start_date_str = lastTuesday.strftime('%a, %d %B %Y ')
     return start_date_str
 
+def getepicexpiry(epicurl):
+  headers = {
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'}
+  cookies = {
+                'wants_mature_content': '1',
+                'birthtime': '-2148631199',
+                'lastagecheckage': '1-0-1902' }
+  r = requests.get(epicurl, headers=headers, cookies=cookies )
+
+  if re.search('"endDate":"([\w\d\-\;\:\.]+)","di',r.text):
+    match1 = re.search('"endDate":"(\S+)","di', r.text)
+    enddate= dateparser.parse( "" + match1.group(1)  , settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'US/Pacific','TO_TIMEZONE': 'UTC' } )
+    return time.mktime( enddate.timetuple() )
+  return
+
+
 def getsteamexpiry(steamurl):
   headers = {
                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'}
@@ -173,6 +189,23 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
       url = submission.url
     logging.debug("checking EGS")
     if "epicgames.com" in url.lower():
+      getexp = getepicexpiry(url)
+      if getexp is not None:
+        try:
+          #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
+          if 'MYSQL_HOST' in os.environ:
+            cursorObj = con.cursor()
+            cursorObj.execute('DELETE from schedules WHERE postid = %s', (submission.id,) )
+            cursorObj.execute('INSERT into schedules(postid, schedtime) values(%s,%s)',(submission.id,getexp) )
+            con.commit()
+          logging.info("[Steam] | " + submission.title + " | https://redd.it/" + submission.id )
+          logging.info("setting up schedule: bot for: " + submission.id)
+          reply_reason = "Steam Game"
+          post_footer = False
+          #reply_text = "^(automatic deal expiry set for " + datetime.datetime.fromtimestamp(int(getexp)).strftime('%Y-%m-%d %H:%M:%S') + " UTC)\n\n"
+        except:
+          pass
+
       if "free" in submission.title.lower():
         postdate = dateparser.parse( str(submission.created_utc) , settings={'TO_TIMEZONE': 'US/Pacific', 'TIMEZONE': 'UTC' } )
 
