@@ -145,8 +145,8 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 """
 
     logging.debug("loading rules")
-
-    wikiconfig = yaml.safe_load( reddit.subreddit('gamedeals').wiki['gamedealsbot-config'].content_md )
+    #wikiconfig = yaml.safe_load( reddit.subreddit('gamedeals').wiki['gamedealsbot-config'].content_md )
+    wikiconfig = yaml.safe_load( open("/shared/wikiconfig.txt").read() )
 
     footer = wikiconfig['footer']
     footer = footer.replace('{{expired trigger}}',wikiconfig['expired-trigger'])
