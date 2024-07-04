@@ -338,6 +338,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
         if "match" in rule:
           if re.search( rule['match'] , url ):
             if "match-title" not in rule or re.search( rule['match-title'] , submission.title.lower(), flags=re.I):
+              print(rule)
               if "dontmatch" not in rule or not re.search( rule['dontmatch'] , url, flags=re.I):
                 #print(rule)
                 if "disabled" not in rule or rule['disabled'] == False:
