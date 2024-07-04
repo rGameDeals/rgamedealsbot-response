@@ -103,15 +103,15 @@ def getsteamexpiry(steamurl):
                 'lastagecheckage': '1-0-1902' }
   r = requests.get(steamurl, headers=headers, cookies=cookies )
   # Offer ends 13 June</p>
-  if re.search("\$DiscountCountdown", r.text, re.IGNORECASE) is not None:
-    match1 = re.search("\$DiscountCountdown, ([\d]+)", r.text, re.IGNORECASE)
+  if re.search("\$DiscountCountdown", r.text) is not None:
+    match1 = re.search("\$DiscountCountdown, ([\d]+)", r.text)
     return match1.group(1)
-  elif re.search("Offer ends ([\w\ ]+)</p>", r.text,re.IGNORECASE) is not None:
-    match1 = re.search("Offer ends ([\w\ ]+)</p>", r.text,re.IGNORECASE)
+  elif re.search("Offer ends ([\w\ ]+)</p>", r.text) is not None:
+    match1 = re.search("Offer ends ([\w\ ]+)</p>", r.text)
     enddate= dateparser.parse( "10am " + match1.group(1)  , settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'US/Pacific','TO_TIMEZONE': 'UTC' } )
     return time.mktime( enddate.timetuple() )
-  elif re.search("Free to keep when you get it before ([\w\:\@\ \.\,]+).\t", r.text,re.IGNORECASE) is not None:
-    match1 = re.search("Free to keep when you get it before ([\w\:\@\ \,\.]+).\t", r.text,re.IGNORECASE)
+  elif re.search("Free to keep when you get it before ([\w\:\@\ \.\,]+).\t", r.text) is not None:
+    match1 = re.search("Free to keep when you get it before ([\w\:\@\ \,\.]+).\t", r.text)
     enddate= dateparser.parse( "" + match1.group(1)  , settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'US/Pacific','TO_TIMEZONE': 'UTC' } )
     return time.mktime( enddate.timetuple() )
   return
@@ -235,13 +235,13 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
           #return
 
     account_flag = 0
-    if re.search("//(\S+)\.itch.io", url,re.IGNORECASE) is not None:
+    if re.search("//(\S+)\.itch.io", url) is not None:
       logging.info("checking itch.io")
-      search1 = re.search( "//(\S+)\.itch.io" , url,re.IGNORECASE)
+      search1 = re.search( "//(\S+)\.itch.io" , url)
       match1 = search1.group(1)
       profile_url = "https://itch.io/profile/" + match1
       profile_page = requests.get(profile_url)
-      pp1 = re.search( 'A member registered <abbr title="([\w\d\ \:\@]+)">' , profile_page.text,re.IGNORECASE)
+      pp1 = re.search( 'A member registered <abbr title="([\w\d\ \:\@]+)">' , profile_page.text)
       if pp1:
           pm1 = pp1.group(1)
           tm = dateparser.parse( pm1, settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'UTC', 'TO_TIMEZONE': 'UTC'} )
@@ -256,10 +256,10 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
             #logID(submission.id)
             #return
 
-    if re.search("//(\S+)\.itch.io", url,re.IGNORECASE) is not None and account_flag == 0:
+    if re.search("//(\S+)\.itch.io", url) is not None and account_flag == 0:
       logging.info("checking itch.io")
       game_page = requests.get(url)
-      pp1 = re.search( 'Published</td><td><abbr title="([\w\d\ \:\@]+)">' , game_page.text,re.IGNORECASE)
+      pp1 = re.search( 'Published</td><td><abbr title="([\w\d\ \:\@]+)">' , game_page.text)
       if pp1:
           pm1 = pp1.group(1)
           tm = dateparser.parse( pm1, settings={'PREFER_DATES_FROM': 'future', 'TIMEZONE': 'UTC', 'TO_TIMEZONE': 'UTC'} )
@@ -273,7 +273,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
             #logID(submission.id)
             #return
 
-    if re.search("store.steampowered.com/(sub|app)", url,re.IGNORECASE) is not None:
+    if re.search("store.steampowered.com/(sub|app)", url) is not None:
      logging.debug("checking Steam")
      if submission.author_flair_css_class is not None and submission.is_self:
        return
@@ -298,7 +298,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
          pass
 
 
-     if re.search("WEEK LONG DEAL", r.text,re.IGNORECASE) is not None:
+     if re.search("WEEK LONG DEAL", r.text) is not None:
        today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
        monday = today - datetime.timedelta(days=today.weekday())
        datetext = monday.strftime('%Y%m%d')
@@ -336,9 +336,9 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
     for rule in rules:
       if rule is not None:
         if "match" in rule:
-          if re.search( rule['match'] , url,re.IGNORECASE ):
-            if "match-title" not in rule or re.search( rule['match-title'] , submission.title.lower() , re.IGNORECASE):
-              if "dontmatch" not in rule or not re.search( rule['dontmatch'] , url , re.IGNORECASE):
+          if re.search( rule['match'] , url ):
+            if "match-title" not in rule or re.search( rule['match-title'] , submission.title.lower(), flags=re.I):
+              if "dontmatch" not in rule or not re.search( rule['dontmatch'] , url):
                 #print(rule)
                 if "disabled" not in rule or rule['disabled'] == False:
                   if "type" not in rule or ( "type" in rule and (rule['type'] == "link" and selfpost == 0) or (rule['type'] == "self" and selfpost == 1) or rule['type'] == "any") :
@@ -348,7 +348,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
                       reply_text = rule['reply']
                       reply_text = reply_text.replace('{{last_tuesday}}', get_last_tuesday("This Month UTC") )
                     if "match-group" in rule:
-                      search1 = re.search( rule['match'] , url, re.IGNORECASE)
+                      search1 = re.search( rule['match'] , url)
                       match1 = search1.group(rule['match-group'])
                       reply_text = reply_text.replace('{{match}}', match1)
 
@@ -404,7 +404,7 @@ while True:
                 donotprocess=False
 
                 ### handle weeklong deals
-                if re.search("steampowered.com.*?filter=weeklongdeals", submission.url, re.IGNORECASE) is not None:
+                if re.search("steampowered.com.*?filter=weeklongdeals", submission.url) is not None:
                   #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
                   today = datetime.datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)
                   monday = today - datetime.timedelta(days=today.weekday())
