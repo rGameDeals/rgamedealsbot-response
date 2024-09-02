@@ -38,7 +38,7 @@ subreddit = reddit.subreddit(REDDIT_SUBREDDIT)
 
 apppath='/storage/'
 
-logging.basicConfig(level=logging.DEBUG,
+logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s - %(message)s',
                     datefmt='%m-%d %H:%M')
 
