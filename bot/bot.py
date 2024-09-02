@@ -38,7 +38,7 @@ subreddit = reddit.subreddit(REDDIT_SUBREDDIT)
 
 apppath='/storage/'
 
-logging.basicConfig(level=logging.INFO,
+logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s - %(message)s',
                     datefmt='%m-%d %H:%M')
 
@@ -170,7 +170,9 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 
     if submission.is_self:
         selfpost = 1
-        urls = re.findall('(?:(?:https?):\/\/)?[\w/\-?=%.]+\.[\w/\-?=%.]+', submission.selftext, flags=re.I)
+        #urls = re.findall('(?:(https?):\/\/)[\w/\-?=%.]+\.[\w/\-?=%.]+', submission.selftext, flags=re.I)
+        urls = re.findall('(?:https?\:\/\/[\w\-?=%.]+\.[\w\-?=%.\_\/]+)', submission.selftext, flags=re.I)
+        #print(urls)
         if len(urls) == 0:
             logging.info("NO LINK FOUND skipping: " + submission.title)
             logID(submission.id)
@@ -273,6 +275,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
             #logID(submission.id)
             #return
 
+    #print( url )
     if re.search("store.steampowered.com/(sub|app)", url, flags=re.I) is not None:
      logging.debug("checking Steam")
      if submission.author_flair_css_class is not None and submission.is_self:
@@ -280,7 +283,12 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
      r = requests.get( url )
 
 
+
      getexp = getsteamexpiry( url )
+
+     if getexp is None:
+       submission.report('Steam submission without sale?')
+
      if getexp is not None:
        try:
          #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
@@ -319,9 +327,6 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
        comment.mod.distinguish(sticky=True)
        submission.mod.remove()
        return
-
-
-
 
 
     logging.debug("Loading Notes")
@@ -380,7 +385,7 @@ If this deal has been mistakenly closed or has been restocked, you can open it a
 #submission = reddit.submission("qiixoa")
 #submission = reddit.submission("qijjlf")
 
-#submission = reddit.submission("vx9z83")
+#submission = reddit.submission("1f74dbn") # to check selfpost text for fixing urls, also used to check if Steam item is not on sale
 #respond( submission )
 #exit()
 
