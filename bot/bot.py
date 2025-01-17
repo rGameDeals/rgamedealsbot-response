@@ -14,13 +14,6 @@ import pymysql
 
 os.environ['TZ'] = 'UTC'
 
-if 'MYSQL_HOST' in os.environ:
-  con = pymysql.connect(
-    host=os.environ['MYSQL_HOST'],
-    user=os.environ['MYSQL_USER'],
-    passwd=os.environ['MYSQL_PASS'],
-    db=os.environ['MYSQL_DB']
-)
 
 REDDIT_CID=os.environ['REDDIT_CID']
 REDDIT_SECRET=os.environ['REDDIT_SECRET']
@@ -125,8 +118,8 @@ def logID(postid):
 
 def respond(submission):
     logging.debug("checking submission")
-    if 'MYSQL_HOST' in os.environ:
-      con.ping(reconnect=True)
+    #if 'MYSQL_HOST' in os.environ:
+    #  con.ping(reconnect=True)
     #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
 
     if 'MYSQL_HOST' in os.environ:
@@ -409,6 +402,14 @@ while True:
 
                 donotprocess=False
 
+                if 'MYSQL_HOST' in os.environ:
+                  con = pymysql.connect(
+                  host=os.environ['MYSQL_HOST'],
+                  user=os.environ['MYSQL_USER'],
+                  passwd=os.environ['MYSQL_PASS'],
+                  db=os.environ['MYSQL_DB']
+                )
+
                 ### handle weeklong deals
                 if re.search("steampowered.com.*?filter=weeklongdeals", submission.url, flags=re.I) is not None:
                   #con = sqlite3.connect(apppath+'gamedealsbot.db', timeout=20)
@@ -495,6 +496,8 @@ while True:
                     if not donotprocess:
                       respond(submission)
                       continue
+
+                con.close()
 
 
     except prawcore.exceptions.ServerError:
